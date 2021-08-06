@@ -9,7 +9,6 @@ const Drawer = createDrawerNavigator();
 export default function X0({ navigation }) {
    
     return (
-      
       <View>
           <Game/>
           <Button 

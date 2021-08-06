@@ -1,14 +1,13 @@
 import React from 'react';
 import { Button, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
 function Square(props) {
     return (
         <TouchableOpacity onPress = { props.onClick }>
           <View style = { styles.container }>
-                <View style = { styles.SquareShapeView }/>
+                <View style = { styles.SquareShapeView }>
                      { props.value }
+                </View>
           </View>
         </TouchableOpacity>
     );
@@ -59,7 +58,9 @@ const styles = StyleSheet.create ({
   },
  
   SquareShapeView: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
+    alignContent: 'center',
+    justifyContent: 'center'
   }
 });

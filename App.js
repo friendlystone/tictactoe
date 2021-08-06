@@ -5,6 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from './components/Home'
 import Description from './components/Description'
 import X0 from './components/X0'
+import Login from './API/Login';
 
 const Drawer = createDrawerNavigator();
 
@@ -28,6 +29,11 @@ export default function App() {
           name = "TicTacToe" 
           component = {X0} 
         />
+
+        <Drawer.Screen 
+          name = "Login" 
+          component = {Login} 
+        />      
       
       </Drawer.Navigator>
       
