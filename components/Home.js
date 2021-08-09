@@ -24,6 +24,11 @@ function Home({ navigation }) {
           title = "Login here"
         />
 
+        <Button
+          onPress={() => navigation.navigate('Request')}
+          title = "Request"
+        />
+
       </View>
     );
 }

@@ -19,6 +19,11 @@ function Description({ navigation }) {
           onPress={ () => navigation.goBack() } 
           title = " Go back "
         />
+
+        <Button
+          onPress={() => navigation.navigate('Request')}
+          title = "Request"
+        />  
       </View>
     );
 }
