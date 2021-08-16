@@ -29,6 +29,11 @@ function Home({ navigation }) {
           title = "Request"
         />
 
+        <Button
+          onPress={() => navigation.navigate('Comment')}
+          title = "Comment"
+        />
+
       </View>
     );
 }

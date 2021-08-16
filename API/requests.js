@@ -34,6 +34,22 @@ export default class Requests extends Component{
         })
     } // works properly
 
+    getData = async(username, password) => { 
+        let formData = new FormData();
+        formData.append('username', 1);
+        formData.append('password','admin');
+        this.setState({ text: 'Clicked' })
+        fetch('https://610cfee166dd8f0017b76f7a.mockapi.io/comments', {
+            method: 'GET',
+            body: formData
+        }).then((Response) => Response.json() )
+        .then(( responseJson) => {
+            this.setState( { text: JSON.stringify(responseJson)})
+        })
+    }
+
+
+
     /// get method
     componentDidMount() {
         fetch('https://610cfee166dd8f0017b76f7a.mockapi.io/users')

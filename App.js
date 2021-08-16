@@ -7,6 +7,7 @@ import Description from './components/Description'
 import X0 from './components/X0'
 import Login from './API/Login';
 import Requests from './API/requests';
+import Comments from './API/Comments';
 
 const Drawer = createDrawerNavigator();
 
@@ -39,7 +40,12 @@ export default function App() {
         <Drawer.Screen 
           name = "Request" 
           component = {Requests} 
-        />          
+        />   
+
+        <Drawer.Screen 
+          name = "Comment" 
+          component = {Comments} 
+        />         
       
       </Drawer.Navigator>
       

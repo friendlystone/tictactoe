@@ -1,32 +1,67 @@
 import React, { Component } from 'react';
 import { Button, SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 import axios from 'axios';
+import { getUsers } from './API';
 
-export default function Login(){
+export default class Login extends React.Component{
+    state = { 
+        username: "",
+        password: ""
+     }
 
-    const [text, onChangeText] = React.useState(null);
-    const [number, onChangeNumber] = React.useState(null);
+    onChangeUsername = ( newUsername ) => {
+        this.setState({ username: newUsername })
+    }
 
-    return(
-        <SafeAreaView>
-                <TextInput
-                    style = { styles.input }
-                    onChangeText = { onChangeText }
-                    value = { text }
-                    placeholder = "username"
-                />
-                <TextInput
-                    style = { styles.input }
-                    onChangeText = { onChangeNumber }
-                    value = { number }
-                    placeholder = "password"
-                 />
-                 <Button 
-                    onPress = { () => navigation.goBack() }
-                    title = "Login" 
-                />
-        </SafeAreaView>
-    );
+    onChangePassword = ( newPassword ) => {
+        this.setState({ password: newPassword })
+    }
+
+    login = () => {
+        getUsers()
+            .catch( error => { console.log('error') } )
+            .then( (result) => {
+                result.json().then( (result) => {
+                    result.map(( account ) => { 
+                        if( account.username === this.state.username )
+                            {
+                                if( account.password === this.state.password )
+                                {
+                                    console.log("Logged in");
+                                }
+                                else
+                                    {
+                                        console.log("Login failed");
+                                    }
+                            }
+                    })
+                });
+            })
+    }
+
+    render(){
+        console.log(this.state.username);
+        return(
+            <SafeAreaView>
+                    <TextInput
+                        style = { styles.input }
+                        onChangeText = { ( username ) => this.onChangeUsername(username) }
+                        value = { this.state.username }
+                        placeholder = "username"
+                    />
+                    <TextInput
+                        style = { styles.input }
+                        onChangeText = { ( password ) => this.onChangePassword(password) }
+                        value = { this.state.password }
+                        placeholder = "password"
+                    />
+                    <Button 
+                        onPress = { () => this.login() }
+                        title = "Login" 
+                    />
+            </SafeAreaView>
+        );
+    }
 } 
 
 const styles = StyleSheet.create({
