@@ -1,9 +1,20 @@
 'use strict';
 
-import React, { Component } from 'react';
-import { Button, StyleSheet, TextInput, View, Text, SafeAreaView } from 'react-native';
+import React, { Component, useState } from 'react';
+import { 
+    Button, 
+    StyleSheet, 
+    TextInput, 
+    View, 
+    Text, 
+    SafeAreaView, 
+    TouchableOpacity, 
+    TouchableHighlight 
+} from 'react-native';
+
 import { getComments } from './API';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
 export default class Comments extends Component {
 
@@ -19,7 +30,10 @@ export default class Comments extends Component {
     state = { 
         id: "",
         userid: "",
-        comment: []
+        comment: [],
+        listData: Array(20)
+            .fill('')
+            .map((_, i) => ({ key: `${i}`, text: `item #${i}` }))
      }
 
     componentDidMount() {
@@ -106,15 +120,58 @@ export default class Comments extends Component {
                 break;
         }
       }
-    
+    closeRow = (rowMap, rowKey) => {
+        if (rowMap[rowKey]) {
+            rowMap[rowKey].closeRow();
+        }
+    };
+
+    deleteRow = (rowMap, rowKey) => {
+        closeRow(rowMap, rowKey);
+        const newData = [...listData];
+        const prevIndex = listData.findIndex(item => item.key === rowKey);
+        newData.splice(prevIndex, 1);
+        setListData(newData);
+    };
+
+    renderItem = (data, rowMap) => (
+        <SwipeRow
+            disableLeftSwipe={parseInt(data.item.key) % 2 === 0}
+            leftOpenValue={20 + Math.random() * 150}
+            rightOpenValue={-150}
+        >
+            <View style={styles.rowBack}>
+                <Text>Left</Text>
+                <TouchableOpacity
+                    style={[styles.backRightBtn, styles.backRightBtnLeft]}
+                    onPress={() => closeRow(rowMap, data.item.key)}
+                >
+                    <Text style={styles.backTextWhite}>Close</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.backRightBtn, styles.backRightBtnRight]}
+                    onPress={() => this.deleteRow(rowMap, data.item.key)}
+                >
+                    <Text style={styles.backTextWhite}>Delete</Text>
+                </TouchableOpacity>
+            </View>
+            <TouchableHighlight
+                onPress={() => console.log('You touched me')}
+                style={styles.rowFront}
+                underlayColor={'#AAA'}
+            >
+                <View>
+                    <Text>{data.item.comment}</Text>
+                </View>
+            </TouchableHighlight>
+        </SwipeRow>
+    );
+  
+
     render(){
-        const { comments } = this.state;
+        const { comments, listData } = this.state;
         console.log(comments);
-        
-        const config = {
-            velocityThreshold: 0.3,
-            directionalOffsetThreshold: 80
-          };
+        console.log(listData);
 
         return( 
 
@@ -134,48 +191,63 @@ export default class Comments extends Component {
                 title = "Post a comment" 
             />
 
-
             <Button 
                 onPress = { () => this.comments() }
                 title = "Show the list of comments" 
             />
             
-                <View>
-                { comments && comments.map((postDetail, index) => {
-                    return  (
-                        <View> { 
-                            `userid: ${postDetail.userid} comment: ${postDetail.comment}`
-                             
-                            }
-                        <GestureRecognizer
-                        onSwipe={(direction, state) => this.onSwipe(direction, state)}
-                        onSwipeUp={(state) => this.onSwipeUp(state)}
-                        onSwipeDown={(state) => this.onSwipeDown(state)}
-                        onSwipeLeft={(state) => this.deleteComment(postDetail.id)}
-                        onSwipeRight={(state) => this.onSwipeRight(state)}
-                        config={config}
-                        style={{
-                          flex: 1,
-                          backgroundColor: this.state.backgroundColor
-                        }}
-                        >
-                        <Text>{this.state.myText}</Text>
-                        <Text>onSwipe callback received gesture: {this.state.gestureName}</Text>
-                      </GestureRecognizer>
-                      </View>
-                      )  
-                }) }
-                </View>
+            <View style={styles.container}>
+               <SwipeListView data={comments} renderItem={this.renderItem} />
+            </View>
     </SafeAreaView>    
         );
     }
 } 
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'white',
+        flex: 1,
+    },
+    backTextWhite: {
+        color: '#FFF',
+    },
+    rowFront: {
+        alignItems: 'center',
+        backgroundColor: '#CCC',
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        justifyContent: 'center',
+        height: 50,
+    },
+    rowBack: {
+        alignItems: 'center',
+        backgroundColor: '#DDD',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 15,
+    },
+    backRightBtn: {
+        alignItems: 'center',
+        bottom: 0,
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        width: 75,
+    },
+    backRightBtnLeft: {
+        backgroundColor: 'blue',
+        right: 75,
+    },
+    backRightBtnRight: {
+        backgroundColor: 'red',
+        right: 0,
+    },
     input: {
       height: 40,
       margin: 12,
       borderWidth: 1,
       padding: 10,
-    },
+    }
   });

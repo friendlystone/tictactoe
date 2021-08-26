@@ -1,5 +1,8 @@
 import React from 'react';
-import { Button, View } from 'react-native';
+import { 
+  Button, 
+  View 
+} from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
@@ -33,6 +36,16 @@ function Home({ navigation }) {
           onPress={() => navigation.navigate('Comment')}
           title = "Comment"
         />
+
+        <Button
+          onPress={() => navigation.navigate('Calendar')}
+          title = "Calendar"
+        />
+
+        <Button
+          onPress={() => navigation.navigate(' - ')}
+          title = "New screen"
+        />  
 
       </View>
     );
